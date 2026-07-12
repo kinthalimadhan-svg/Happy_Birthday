@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Birthday Surprise - For Thulya 💖</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="music.js?v=12" defer></script>
+</head>
+<body>
+
+  <!-- Viewport Shutter Flash Effect Overlay -->
+  <div class="camera-flash-overlay" id="camera-flash"></div>
+
+  <!-- Floating Particles Background -->
+  <div class="particle-layer" id="particle-layer"></div>
+
+  <!-- Background Incremental Decorations Layer -->
+  <div class="decorations-layer" id="decorations-layer"></div>
+
+  <!-- Ambient String Lights (fades in during stage 5) -->
+  <ul class="string-lights" id="string-lights">
+    <li></li><li></li><li></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li><li></li>
+  </ul>
+
+  <!-- Ambient Balloon Layer -->
+  <div class="balloon-layer" id="balloon-layer"></div>
+
+  <!-- INTRO STAGES CONTAINER -->
+  <div class="stage-container" id="intro-container">
+    
+    <!-- Stage 0: Envelope -->
+    <div class="stage active fade-in" id="stage-0">
+      <h1 class="animated-title">A Birthday Surprise<br><span style="font-size: 1.6rem; font-weight: 500;">A little something for your 20iest ✨</span></h1>
+      <div class="envelope-wrapper" onclick="openEnvelope()">
+        <div class="wax-seal" id="wax-seal"></div>
+        <div class="envelope" id="envelope">
+          <div class="envelope-top"></div>
+          <div class="envelope-back"></div>
+          <div class="letter-card">
+            <p style="text-align: center; color: var(--pink-vibrant); font-family: var(--font-title); font-size: 1.3rem;">For Thulya 🌸</p>
+          </div>
+          <div class="envelope-front"></div>
+        </div>
+      </div>
+      <p class="envelope-hint">Click the gold seal to open</p>
+    </div>
+
+    <!-- Stage 1: It's a special day -->
+    <div class="stage" id="stage-1">
+      <h2 class="text-cute">It's a special day... ✨</h2>
+      <button class="btn-cute" onclick="progressStage(2, 'stars')">Next ➡️</button>
+    </div>
+
+    <!-- Stage 2: Have a look Thulya 👀 -->
+    <div class="stage" id="stage-2">
+      <h2 class="text-cute">Have a look Thulya 👀</h2>
+      <button class="btn-cute" onclick="progressStage(3, 'clouds')">Next ➡️</button>
+    </div>
+
+    <!-- Stage 3: Ready for the surprise -->
+    <div class="stage" id="stage-3">
+      <h2 class="text-cute">Ready for the surprise? 🥺</h2>
+      <button class="btn-cute" onclick="progressStage(4, 'petals')">Next ➡️</button>
+    </div>
+
+    <!-- Stage 4: Music makes it better -->
+    <div class="stage" id="stage-4">
+      <h2 class="text-cute">Music makes it better, right? 🎵</h2>
+      <button class="btn-cute" onclick="playMusicAndProgress()">Play Music 🎶</button>
+    </div>
+
+    <!-- Stage 5: Lets add some ambience -->
+    <div class="stage" id="stage-5">
+      <h2 class="text-cute">Lets add some ambience</h2>
+      <button class="btn-cute" onclick="addAmbience()">Show 🌟</button>
+    </div>
+
+    <!-- Stage 5b: Ready for Reveal -->
+    <div class="stage" id="stage-5b">
+      <h2 class="text-cute">Everything is perfect now! 💖</h2>
+      <button class="btn-cute" onclick="showSurprisePopup()">I am ready! 🎂</button>
+    </div>
+
+    <!-- Stage 7: Camera Captured Moments Game -->
+    <div class="stage" id="stage-7">
+      <h2 class="text-cute" style="margin-bottom: 0.5rem;">Captured Moments 📸</h2>
+      <p style="color: var(--rose-medium); margin-bottom: 1.5rem; font-size: 1.05rem;">Collect 9 memory polaroids by snapping photos!</p>
+      
+      <div class="camera-container">
+        <div class="camera-graphic" onclick="tapCamera()">
+          <div class="camera-shutter-btn"></div>
+        </div>
+        <div class="camera-text-bottom">Tap the camera</div>
+      </div>
+
+      <div class="camera-grid" id="camera-grid">
+        <!-- 9 slots for polaroids dynamically filled -->
+      </div>
+
+      <button class="btn-cute" id="btn-ritual" style="display: none; margin-top: 2rem;" onclick="goToStage(8)">Ritual 🕯️</button>
+    </div>
+
+    <!-- Stage 8: Ritual - Make a Wish & Blow Candle -->
+    <div class="stage" id="stage-8">
+      <h2 class="text-cute" style="margin-bottom: 0.5rem;" id="wish-title">Make a wish! 🕯️</h2>
+      <p style="color: var(--rose-medium); margin-bottom: 1.5rem; font-size: 1.1rem; max-width: 400px; line-height: 1.5;" id="wish-subtitle">
+        Close your eyes, think of something beautiful, then blow out the candle
+      </p>
+
+      <div class="ritual-candle-container">
+        <div class="candle-wrapper" id="candle-wrapper" onclick="blowCandle()">
+          <div class="candle-flame" id="candle-flame"></div>
+          <div class="candle-wick"></div>
+          <div class="candle-body"></div>
+        </div>
+        <div class="hope-text-message" id="hope-text" style="display: none;">may the every thing you hoped for find its way to you</div>
+      </div>
+
+      <!-- Interactive Cake Slice Container (Kawaii Oreo Cake) -->
+      <div class="cake-container" id="cake-container" onclick="cutCake()">
+        <h2 class="text-cute" id="cake-cut-title">Cut the cake 🔪🍰</h2>
+        <div class="cake-graphic">
+          <div class="cut-line"></div>
+          
+          <!-- Oreo toppings standing on top of cake -->
+          <div class="cake-topping-oreos">
+            <div class="topping-oreo"></div>
+            <div class="topping-oreo"></div>
+            <div class="topping-oreo"></div>
+          </div>
+          
+          <!-- Left Half of Kawaii Oreo Cake -->
+          <div class="cake-half left">
+            <div class="cake-drip"></div>
+            <div class="cake-drip-detail d1"></div>
+            <div class="cake-drip-detail d2"></div>
+            <div class="cake-drip-detail d3"></div>
+            <div class="kawaii-eye"></div>
+            <div class="kawaii-blush"></div>
+            <div class="kawaii-mouth"></div>
+          </div>
+          
+          <!-- Right Half of Kawaii Oreo Cake -->
+          <div class="cake-half right">
+            <div class="cake-drip"></div>
+            <div class="cake-drip-detail d1"></div>
+            <div class="cake-drip-detail d2"></div>
+            <div class="cake-drip-detail d3"></div>
+            <div class="kawaii-eye"></div>
+            <div class="kawaii-blush"></div>
+            <div class="kawaii-mouth"></div>
+          </div>
+        </div>
+        <div class="cake-wish-text">Happy Birthday Thulya! 🎂✨</div>
+        
+        <button class="btn-cute" id="btn-note" style="display: none; margin-top: 2.5rem;" onclick="showMainBirthdayPage()">A note for you 💌</button>
+      </div>
+    </div>
+
+    <!-- Stage 9: Password lock entry (now opens as a new page stage!) -->
+    <div class="stage" id="stage-9">
+      <!-- Normal Form Container -->
+      <div class="code-input-container" id="password-form-container">
+        <h2 class="text-cute" style="margin-top: 1rem;">A small Gift for you</h2>
+        <input type="password" id="gift-password-input" placeholder="Type password..." class="input-cute">
+        <p style="color: var(--rose-medium); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 0.8rem; font-style: italic;">The password is inside the gift I have given you! 🎁</p>
+        <div class="error-message" id="error-message"></div>
+        <button class="btn-cute" onclick="verifyGiftPassword()">Unlock Gift 🔓</button>
+      </div>
+      
+      <!-- Wrong Password Error Container (Initially Hidden) -->
+      <div id="aunty-container" style="display: none; flex-direction: column; align-items: center; gap: 1.5rem;">
+        <h2 class="text-cute" style="color: var(--pink-bright); margin-top: 1rem;">The Password is wrong Aunty👵</h2>
+        <button class="btn-cute btn-secondary" onclick="resetPasswordForm()">Back ⬅️</button>
+      </div>
+    </div>
+
+    <!-- Stage 10: Salty Gift Box Reveal Stage -->
+    <div class="stage" id="stage-10">
+      <!-- Floating Gift Box Container -->
+      <div class="gift-box-wrapper" id="gift-box-wrapper" onclick="openGiftBox()">
+        <img src="assets/gift_box_transparent.png" class="gift-box-img" alt="Salty Surprise Box">
+        <p class="gift-box-hint" style="margin-top: 1rem;">Click on it ✨</p>
+      </div>
+      
+      <!-- 2 Cards Selection Page (Initially Hidden) -->
+      <div id="gift-cards-selection-page" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+        <h2 class="text-cute" style="margin-bottom: 1.5rem; color: var(--pink-bright);">Choose a gift to open 💖</h2>
+        
+        <div class="gift-cards-wrapper" style="display: flex !important; flex-direction: row !important; justify-content: center !important; align-items: center !important; gap: 1.5rem !important; width: 100% !important; flex-wrap: nowrap !important;">
+          <!-- Card 1: Bracelet Selector -->
+          <div class="gift-card-simple" id="gift-card-1" onclick="openGiftMessage(1)">
+            Braclet
+          </div>
+          
+          <!-- Card 2: Chain Selector -->
+          <div class="gift-card-simple" id="gift-card-2" onclick="openGiftMessage(2)">
+            Chain
+          </div>
+        </div>
+        <p style="color: var(--pink-bright); font-family: var(--font-title); font-size: 1.05rem; margin-top: 1.5rem; font-weight: 600; text-align: center; animation: pulseOpacity 1.5s infinite ease-in-out;">Click on the buttons above! 💖</p>
+        
+        <button class="btn-cute" onclick="goToStage(11)" style="margin-top: 2.5rem;">Next ➡️</button>
+      </div>
+
+      <!-- Card 1 Message View (Initially Hidden) -->
+      <div id="gift-message-1" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+        <div class="scrapbook-card" style="opacity: 1; transform: none; margin-bottom: 2rem; max-width: 480px; width: 100%; border: 5px solid var(--pink-soft);">
+          <h3 class="text-cute" style="color: var(--pink-bright); font-size: 1.5rem; margin-bottom: 1.5rem;">For Your Wrist 🌸</h3>
+          <p class="fade-in-para" style="text-align: justify; font-size: 1.1rem; line-height: 1.7; margin-bottom: 1rem;">
+            I got this bracelet for you because the moment I saw it, it reminded me of you. 😄
+          </p>
+          <p class="fade-in-para" style="text-align: justify; font-size: 1.1rem; line-height: 1.7; margin-bottom: 1rem;">
+            I know how much you like pink, and I've seen you wearing bracelets many times. So I thought this is something you'll actually use instead of just keeping it aside.
+          </p>
+          <p class="fade-in-para" style="text-align: justify; font-size: 1.1rem; line-height: 1.7; margin-bottom: 1rem;">
+            It's just a small gift, but I wanted it to be something that matches your style and reminds you that someone thought of you while choosing it.
+          </p>
+          <p class="fade-in-para" style="text-align: justify; font-size: 1.1rem; line-height: 1.7; margin-bottom: 0;">
+            I hope you like it And Don't worry it's anti - tarnish😄 so, hopefully it stays for a long time.
+          </p>
+        </div>
+        <button class="btn-cute btn-secondary" onclick="backToCardsSelection()">Back ⬅️</button>
+      </div>
+
+      <!-- Card 2 Message View (Initially Hidden) -->
+      <div id="gift-message-2" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+        <div class="scrapbook-card" style="opacity: 1; transform: none; margin-bottom: 2rem; max-width: 480px; width: 100%; border: 5px solid var(--pink-soft);">
+          <h3 class="text-cute" style="color: var(--pink-bright); font-size: 1.5rem; margin-bottom: 1.5rem;">For Your Neck ✨</h3>
+          <p class="fade-in-para" style="text-align: justify; font-size: 1.1rem; line-height: 1.7; margin-bottom: 1rem;">
+            I got this chain because I wanted to give you something that feels a little more personal. 😄
+          </p>
+          <p class="fade-in-para" style="text-align: justify; font-size: 1.1rem; line-height: 1.7; margin-bottom: 1rem;">
+            The "C" charm was an easy choice because, obviously, it starts with your name. And for the birthstone, I actually ordered the blue one because I know how much you like blueberries.
+          </p>
+          <p class="fade-in-para" style="text-align: justify; font-size: 1.1rem; line-height: 1.7; margin-bottom: 1rem;">
+            But sadly, I got the pink stone instead. At first I was a little disappointed but then I remembered you love pink too.😂 So I thought, Okay this actually suits her as well.
+          </p>
+          <p class="fade-in-para" style="text-align: justify; font-size: 1.1rem; line-height: 1.7; margin-bottom: 0;">
+            I just hope you like it and whenever you wear it it brings a smile to your face.
+          </p>
+        </div>
+        <button class="btn-cute btn-secondary" onclick="backToCardsSelection()">Back ⬅️</button>
+      </div>
+    </div>
+
+    <!-- Stage 11: Finale Credits Screen (opens as a new page stage) -->
+    <div class="stage" id="stage-11">
+      <div class="finale-credits-screen">
+        <div class="credits-sub-heading">Story - Screen play - Direction</div>
+        <div class="credits-main-title">Madhan</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FULL-SCREEN LETTER-BY-LETTER BIRTHDAY POPUP -->
+  <div class="popup-overlay" id="surprise-popup">
+    <div class="popup-word-container" id="popup-word-container">
+      <!-- Word spans populated dynamically -->
+    </div>
+    <button class="btn-cute" id="lets-go-btn" onclick="enterCameraGame()">Captured moments ➡️</button>
+  </div>
+
+  <!-- MAIN BIRTHDAY SCROLLING LETTER PAGE -->
+  <div class="main-birthday-page" id="main-birthday-page">
+    <div class="letter-outer-wrapper">
+      
+      <!-- Scrolling Side Flower Lanes -->
+      <div class="flower-border-lane left" id="flower-lane-left"></div>
+      <div class="flower-border-lane right" id="flower-lane-right"></div>
+      
+      <!-- Single card containing story text with double border -->
+      <section class="scrapbook-card" id="story-card">
+        <p>When we first met in our <span class="highlight-text">B.Tech days</span> we didn't know much about each other. We were just classmates from the 3rd semester. Most of the time, we only talked because you were always with your best friend and I was with Nikhil. Basically we were just two people who got dragged into conversations because of them. 😄</p>
+        
+        <p>If someone had told me at that time that we would become such good friends I would have definitely said "No way!" We hardly talked and I never thought we would become this close one day.</p>
+        
+        <p>But after some time, something changed. We started talking more, sharing jokes, and supporting each other through the college chaos. We became such good friends that it completely <span class="highlight-text">beyond my expectations</span>.</p>
+        
+        <p>I realized that you have this wonderful energy (<span class="highlight-text">"Nuvu lekapote em ipotam oo"</span>) that makes everyone around you happy. Our random chats and college became a lot more fun with you around.</p>
+        
+        <p>It's funny how life works. Their story ended, but our friendship started. Nobody planned it. It just happened naturally. Slowly, those small conversations became talks, then came the inside jokes, sharing everything, helping each other, and making so many good memories together.</p>
+        
+        <p>Now when I think about it, it feels really funny. We first met because of someone else's friendship, but today we have our own friendship. Out of all the unexpected things that happened during B.Tech.</p>
+        
+        <p>The time we spent together recently has been so <span class="highlight-text">FUN</span>. Whether we are laughing over silly things, just sharing updates, every moment is a memory.</p>
+        
+        <p>I'm really happy that things happened this way. I'm glad that a person who was once just a random classmate became such a close friend.</p>
+        
+        <p>On your <span class="highlight-text">20th Birthday</span> I want to say that I hope our bond continues for years and years to come. Ante inka i hope you will have <span class="highlight-text">Sukham in your brathuku</span>.</p>
+      </section>
+
+      <!-- Scroll Action Button -->
+      <div style="margin: 2.5rem 0; width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <button class="btn-cute" onclick="openPasswordPage()">A gift for you 🎁</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Create random background bubbles
+    function createBackgroundParticles() {
+      const container = document.getElementById('particle-layer');
+      const particleCount = 35;
+      for (let i = 0; i < particleCount; i++) {
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        p.style.width = p.style.height = `${Math.random() * 22 + 10}px`;
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.animationDelay = `${Math.random() * 8}s`;
+        p.style.animationDuration = `${Math.random() * 6 + 6}s`;
+        container.appendChild(p);
+      }
+    }
+    createBackgroundParticles();
+
+    // Stage Transitions & Background Decorations
+    let currentStage = 0;
+    
+    function openEnvelope() {
+      const env = document.getElementById('envelope');
+      const seal = document.getElementById('wax-seal');
+      const title = document.querySelector('#stage-0 .animated-title');
+      const hint = document.querySelector('#stage-0 .envelope-hint');
+      const wrapper = document.querySelector('.envelope-wrapper');
+
+      // 1. Open flap
+      env.classList.add('open');
+      seal.style.opacity = '0';
+      document.body.classList.add('bg-surprise-mix');
+      
+      // 2. Wait for card to slide out, then fade out envelope & starting headers
+      setTimeout(() => {
+        if (title) title.style.opacity = '0';
+        if (hint) hint.style.opacity = '0';
+        if (wrapper) {
+          wrapper.style.opacity = '0';
+          wrapper.style.transform = 'scale(0.85) translateY(-20px)';
+        }
+      }, 1800);
+
+      // 3. Go to Stage 1 after fade out completes
+      setTimeout(() => {
+        goToStage(1);
+      }, 2600);
+    }
+
+    function goToStage(num) {
+      document.querySelectorAll('.stage').forEach(s => {
+        s.classList.remove('active');
+        s.classList.remove('fade-in');
+      });
+      const target = document.getElementById(`stage-${num}`);
+      if (target) {
+        target.classList.add('active');
+        // trigger reflow to guarantee CSS transition initiates
+        void target.offsetWidth;
+        target.classList.add('fade-in');
+      }
+    }
+
+    // Snappy yet smooth transition fades
+    function progressStage(nextStageNum, decorationType) {
+      const currentActive = document.querySelector('.stage.active');
+      if (currentActive) {
+        currentActive.classList.remove('fade-in');
+      }
+      
+      if (decorationType) {
+        addBackgroundDecoration(decorationType);
+      }
+      
+      setTimeout(() => {
+        if (currentActive) {
+          currentActive.classList.remove('active');
+        }
+        goToStage(nextStageNum);
+      }, 1000);
+    }
+
+    function playMusicAndProgress() {
+      if (window.birthdayMusicBox) {
+        window.birthdayMusicBox.start();
+      }
+      progressStage(5, 'notes');
+    }
+
+    // Dynamic background decorations (Start in motion using negative delays)
+    function addBackgroundDecoration(type) {
+      const layer = document.getElementById('decorations-layer');
+      
+      if (type === 'stars') {
+        for (let i = 0; i < 18; i++) {
+          const s = document.createElement('div');
+          s.classList.add('star-deco');
+          s.style.left = `${Math.random() * 95}%`;
+          s.style.animationDelay = `-${Math.random() * 6}s`; // negative delay so they start moving immediately
+          s.style.animationDuration = `${Math.random() * 5 + 4}s`;
+          layer.appendChild(s);
+          setTimeout(() => s.classList.add('active'), 50);
+        }
+      } 
+      else if (type === 'clouds') {
+        const cloudHeights = [15, 35, 60, 85];
+        for (let i = 0; i < 4; i++) {
+          const c = document.createElement('div');
+          c.classList.add('cloud-deco');
+          c.style.top = `${cloudHeights[i]}%`;
+          if (i % 2 === 0) {
+            c.classList.add('cloud-left');
+          } else {
+            c.classList.add('cloud-right');
+          }
+          c.style.animationDelay = `-${Math.random() * 25}s`; // start distributed across screen
+          c.style.animationDuration = `${25 + Math.random() * 8}s`;
+          layer.appendChild(c);
+          setTimeout(() => c.classList.add('active'), 50);
+        }
+      } 
+      else if (type === 'petals') {
+        for (let i = 0; i < 28; i++) {
+          const p = document.createElement('div');
+          p.classList.add('petal-deco');
+          p.style.left = `${Math.random() * 95}%`;
+          p.style.animationDelay = `-${Math.random() * 9}s`; // start falling in scattered patterns
+          p.style.animationDuration = `${Math.random() * 6 + 6}s`;
+          if (Math.random() > 0.5) p.style.backgroundColor = '#ffffff';
+          layer.appendChild(p);
+          setTimeout(() => p.classList.add('active'), 50);
+        }
+      }
+      else if (type === 'notes') {
+        const notesList = ['🎵', '🎶', '♩', '♪', '♫'];
+        for (let i = 0; i < 15; i++) {
+          const n = document.createElement('div');
+          n.classList.add('note-deco');
+          n.textContent = notesList[Math.floor(Math.random() * notesList.length)];
+          n.style.left = `${Math.random() * 95}%`;
+          n.style.animationDelay = `-${Math.random() * 6}s`; // start floating
+          n.style.animationDuration = `${Math.random() * 5 + 4}s`;
+          layer.appendChild(n);
+          setTimeout(() => n.classList.add('active'), 50);
+        }
+      }
+    }
+
+    // Ambience glow
+    function addAmbience() {
+      const lights = document.getElementById('string-lights');
+      lights.classList.add('visible');
+
+      const balloonLayer = document.getElementById('balloon-layer');
+      balloonLayer.classList.add('visible');
+      generateBalloons();
+
+      setTimeout(() => {
+        goToStage('5b');
+      }, 1500);
+    }
+
+    // Balloon generation
+    function generateBalloons() {
+      const layer = document.getElementById('balloon-layer');
+      const colors = ['#ff85a1', '#ffc2d1', '#ffb3c1', '#ffffff'];
+      for (let i = 0; i < 18; i++) {
+        const balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.color = color;
+        balloon.style.backgroundColor = color;
+        balloon.style.left = `${Math.random() * 90}%`;
+        balloon.style.animationDelay = `${Math.random() * 8}s`;
+        balloon.style.animationDuration = `${Math.random() * 6 + 8}s`;
+
+        const string = document.createElement('div');
+        string.classList.add('balloon-string');
+        balloon.appendChild(string);
+
+        layer.appendChild(balloon);
+      }
+    }
+
+    // Full-Screen Letter-by-Letter display: "Happy Birthday Chathurya!"
+    function showSurprisePopup() {
+      // Completely hide intro container during popup display to prevent overlay overlap bugs!
+      document.getElementById('intro-container').style.display = 'none';
+      
+      const popup = document.getElementById('surprise-popup');
+      popup.classList.add('active');
+      
+      // Trigger a massive popper confetti burst on popup start!
+      burstBirthdayPoppers();
+      
+      const container = document.getElementById('popup-word-container');
+      container.innerHTML = ""; 
+      
+      const wishText = "Happy Birthday Chathurya!";
+      const words = wishText.split(" ");
+      let totalLetterIdx = 0;
+      
+      words.forEach((word, wordIdx) => {
+        const wordDiv = document.createElement('div');
+        wordDiv.style.display = 'inline-block';
+        wordDiv.style.marginRight = '12px';
+        
+        for (let char of word) {
+          const span = document.createElement('span');
+          span.classList.add('letter-span');
+          span.textContent = char;
+          if (wordIdx === 2) {
+            span.classList.add('highlight');
+            span.classList.add('last-word-letter');
+          }
+          wordDiv.appendChild(span);
+        }
+        container.appendChild(wordDiv);
+      });
+
+      const spans = document.querySelectorAll('.letter-span');
+      spans.forEach((span, index) => {
+        setTimeout(() => {
+          span.classList.add('show');
+          if (span.classList.contains('last-word-letter') && index === spans.length - 1) {
+            createConfettiExplosion(span);
+          }
+        }, index * 90); 
+      });
+
+      // Show "Captured moments" button
+      setTimeout(() => {
+        document.getElementById('lets-go-btn').classList.add('show-btn');
+      }, spans.length * 90 + 500);
+    }
+
+    // Birthday corner popper blast
+    function burstBirthdayPoppers() {
+      const layer = document.getElementById('decorations-layer');
+      const colors = ['#ff85a1', '#ffc2d1', '#ffb3c1', '#ffffff', '#ff0a54', '#ffd166'];
+      const particleCount = 80;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const c = document.createElement('div');
+        c.classList.add('confetti');
+        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        c.style.position = 'fixed';
+        c.style.zIndex = '250';
+        c.style.opacity = '1';
+        
+        const fromLeft = Math.random() > 0.5;
+        c.style.bottom = '-10px';
+        c.style.left = fromLeft ? '-10px' : (window.innerWidth + 10) + 'px';
+        
+        const baseAngle = fromLeft ? -Math.PI / 4 : -3 * Math.PI / 4;
+        const angle = baseAngle + (Math.random() * 0.4 - 0.2); 
+        const distance = Math.random() * (window.innerWidth * 0.8) + 120;
+        
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+        
+        c.style.setProperty('--x', `${x}px`);
+        c.style.setProperty('--y', `${y}px`);
+        c.style.setProperty('--r', `${Math.random() * 720}deg`);
+        
+        c.style.animation = 'popConfetti 1.8s forwards ease-out';
+        layer.appendChild(c);
+        
+        setTimeout(() => c.remove(), 2000);
+      }
+    }
+
+    // Shower of falling color papers from top to bottom (renders on top of all popups)
+    function fallingConfettiShower() {
+      const colors = ['#ff85a1', '#ffc2d1', '#ffb3c1', '#ffffff', '#ff0a54', '#ffd166', '#76c893', '#1e90ff'];
+      const paperCount = 100;
+      
+      for (let i = 0; i < paperCount; i++) {
+        setTimeout(() => {
+          const p = document.createElement('div');
+          p.classList.add('confetti-paper');
+          p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          p.style.left = `${Math.random() * 100}%`;
+          p.style.width = `${Math.random() * 6 + 8}px`;
+          p.style.height = `${Math.random() * 8 + 12}px`;
+          
+          // Random left or right sway
+          const sway = Math.random() > 0.5 ? (Math.random() * 60 + 40) : -(Math.random() * 60 + 40);
+          p.style.setProperty('--sway', `${sway}px`);
+          
+          const duration = Math.random() * 1.5 + 2.5; // 2.5s to 4.0s
+          p.style.animationDuration = `${duration}s`;
+          
+          // Append to document.body so it renders on top of the surprise popup (Z-index stacking context bypass)
+          document.body.appendChild(p);
+          
+          setTimeout(() => p.remove(), duration * 1000);
+        }, i * 25); // Spawn sequentially to create a continuous rain
+      }
+    }
+
+    // Safe transition into the camera game (Hides popup, restores intro container)
+    function enterCameraGame() {
+      document.getElementById('surprise-popup').classList.remove('active');
+      document.getElementById('intro-container').style.display = 'flex';
+      goToStage(7);
+    }
+
+    // Camera Tap Game (Uses user's uploaded photo_1.jpg to photo_9.jpg)
+    let cameraClicks = 0;
+    const photoDetails = [
+      { img: 'assets/photo_1.jpg', cap: 'B.Tech Days 🎓' },
+      { img: 'assets/photo_2.jpg', cap: 'Sweet Laughs 🍰' },
+      { img: 'assets/photo_3.jpg', cap: 'Smiles 🌟' },
+      { img: 'assets/photo_4.jpg', cap: 'Chilling 😎' },
+      { img: 'assets/photo_5.jpg', cap: 'Friendship 💖' },
+      { img: 'assets/photo_6.jpg', cap: 'Happy Times 🧁' },
+      { img: 'assets/photo_7.jpg', cap: 'Special Days 🎉' },
+      { img: 'assets/photo_8.jpg', cap: 'Cute Smile 😊' },
+      { img: 'assets/photo_9.jpg', cap: 'Happy Memories 🌸' }
+    ];
+
+    function tapCamera() {
+      if (cameraClicks >= 9) return;
+      
+      cameraClicks++;
+      
+      // 1. Play Shutter Click Sound
+      if (window.birthdayMusicBox) {
+        window.birthdayMusicBox.playCameraShutter();
+      }
+      
+      // 2. Trigger Flash
+      const flash = document.getElementById('camera-flash');
+      flash.classList.remove('flash');
+      void flash.offsetWidth; 
+      flash.classList.add('flash');
+      
+      // 3. Add Polaroid to Grid
+      const grid = document.getElementById('camera-grid');
+      const photoInfo = photoDetails[cameraClicks - 1];
+      
+      const photoDiv = document.createElement('div');
+      photoDiv.classList.add('grid-photo');
+      const rot = (Math.random() * 14 - 7).toFixed(1);
+      photoDiv.style.setProperty('--rot', `${rot}deg`);
+      
+      photoDiv.innerHTML = `
+        <img src="${photoInfo.img}" alt="Memory ${cameraClicks}">
+        <div class="grid-photo-caption">${photoInfo.cap}</div>
+      `;
+      grid.appendChild(photoDiv);
+      
+      setTimeout(() => {
+        photoDiv.classList.add('added');
+      }, 50);
+
+      // If 9 clicks reached, show "Ritual" button
+      if (cameraClicks === 9) {
+        setTimeout(() => {
+          document.getElementById('btn-ritual').style.display = 'inline-block';
+          document.getElementById('btn-ritual').scrollIntoView({ behavior: 'smooth' });
+        }, 800);
+      }
+    }
+
+    // Blow candle (Smoothly flares flame, fades wish text, moves candle up while hope text fades in, then fades all out)
+    function blowCandle() {
+      const candle = document.getElementById('candle-wrapper');
+      const flame = document.getElementById('candle-flame');
+      if (candle.classList.contains('blown')) return;
+      
+      // 1. Bloom the flame (flare up!)
+      flame.classList.add('bloom');
+      
+      // 2. Smoothly fade out the wish title and subtitle text
+      const t = document.getElementById('wish-title');
+      const st = document.getElementById('wish-subtitle');
+      if (t) t.style.opacity = '0';
+      if (st) st.style.opacity = '0';
+      
+      // 3. Wait for bloom flare, then turn flame off
+      setTimeout(() => {
+        candle.classList.add('blown');
+        flame.style.opacity = '0';
+        flame.style.transform = 'scale(0)';
+      }, 600);
+      
+      // 4. Wait for flame to go out, hide wish text, show hope text, and slowly translate candle up
+      setTimeout(() => {
+        if (t) t.style.display = 'none';
+        if (st) st.style.display = 'none';
+        
+        // Translate candle slowly upwards
+        candle.style.transform = 'translateY(-50px)';
+        
+        // Fade in hope text
+        const hopeText = document.getElementById('hope-text');
+        hopeText.style.display = 'block';
+        void hopeText.offsetWidth; // trigger reflow
+        hopeText.style.opacity = '1';
+      }, 1200);
+
+      // 5. Let hope text stay for 3.5s, then fade everything out (candle continues moving up)
+      setTimeout(() => {
+        const hopeText = document.getElementById('hope-text');
+        hopeText.style.opacity = '0';
+        candle.style.opacity = '0';
+        candle.style.transform = 'translateY(-100px) scale(0.9)';
+      }, 4700);
+
+      // 6. Transition completely to the Oreo cake page
+      setTimeout(() => {
+        const hopeText = document.getElementById('hope-text');
+        hopeText.style.display = 'none';
+        candle.style.display = 'none';
+        
+        // Show cake container and fade in
+        const cc = document.getElementById('cake-container');
+        cc.style.display = 'flex';
+        void cc.offsetWidth; // trigger reflow
+        cc.classList.add('fade-in');
+      }, 5900);
+    }
+
+    // Cut cake
+    function cutCake() {
+      const cake = document.getElementById('cake-container');
+      if (cake.classList.contains('cut')) return;
+      
+      cake.classList.add('cut');
+      
+      setTimeout(() => {
+        document.getElementById('btn-note').style.display = 'inline-block';
+        document.getElementById('btn-note').scrollIntoView({ behavior: 'smooth' });
+      }, 1200);
+    }
+
+    // Transition to main scrolling content
+    function showMainBirthdayPage() {
+      const intro = document.getElementById('intro-container');
+      intro.style.transition = 'all 1s ease';
+      intro.style.opacity = '0';
+      intro.style.transform = 'scale(0.9)';
+      
+      setTimeout(() => {
+        intro.style.display = 'none';
+        
+        // Show main page
+        const mainPage = document.getElementById('main-birthday-page');
+        mainPage.classList.add('visible');
+        
+        document.body.className = '';
+        document.body.classList.add('bg-main-birthday');
+        document.body.style.minHeight = 'auto'; 
+        
+        initScrollAnimations();
+        initFlowerBackground();
+        initBorderFlowersScroll(); // start animated flower borders scrolling!
+      }, 1000);
+    }
+
+    // Scroll card fade in
+    function initScrollAnimations() {
+      const card = document.getElementById('story-card');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      }, { threshold: 0.05 });
+
+      observer.observe(card);
+    }
+
+    // Floating flowers at scroll end
+    function initFlowerBackground() {
+      const layer = document.getElementById('decorations-layer');
+      const flowers = ['🌸', '🌸', '🌸', '💮', '💮', '💮'];
+      
+      setInterval(() => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 900) {
+          const f = document.createElement('div');
+          f.classList.add('flower-deco');
+          f.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+          f.style.left = `${Math.random() * 95}%`;
+          f.style.top = `${window.scrollY + window.innerHeight - 30}px`;
+          f.style.animationDuration = `${Math.random() * 5 + 7}s`;
+          layer.appendChild(f);
+          
+          setTimeout(() => f.remove(), 12000);
+        }
+      }, 1200);
+    }
+
+    // Animated borders: Spawns falling flowers continuously along letter borders
+    function initBorderFlowersScroll() {
+      const leftLane = document.getElementById('flower-lane-left');
+      const rightLane = document.getElementById('flower-lane-right');
+      const flowers = ['🌸', '💮', '🌸', '💮'];
+      
+      setInterval(() => {
+        if (document.getElementById('main-birthday-page').classList.contains('visible')) {
+          // Left border flower
+          const fl = document.createElement('div');
+          fl.classList.add('scrolling-border-flower');
+          fl.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+          fl.style.left = `${Math.random() * 6}px`;
+          fl.style.animationDuration = `${Math.random() * 2 + 4}s`;
+          leftLane.appendChild(fl);
+          setTimeout(() => fl.remove(), 6000);
+          
+          // Right border flower
+          const fr = document.createElement('div');
+          fr.classList.add('scrolling-border-flower');
+          fr.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+          fr.style.right = `${Math.random() * 6}px`;
+          fr.style.animationDuration = `${Math.random() * 2 + 4}s`;
+          rightLane.appendChild(fr);
+          setTimeout(() => fr.remove(), 6000);
+        }
+      }, 600);
+    }
+
+    // Hides scrapbook page and opens Stage 9 (Password lock stage page)
+    function openPasswordPage() {
+      const mainPage = document.getElementById('main-birthday-page');
+      mainPage.classList.remove('visible');
+      mainPage.style.display = 'none';
+      
+      const intro = document.getElementById('intro-container');
+      intro.style.display = 'flex';
+      intro.style.opacity = '1';
+      intro.style.transform = 'none';
+      
+      goToStage(9);
+    }
+
+    // Verify Gift password lock stage
+    function verifyGiftPassword() {
+      const input = document.getElementById('gift-password-input');
+      const val = input.value.trim();
+      
+      if (val === 'Thulya1307200620' || val.toLowerCase() === 'thulya1307200620') {
+        goToStage(10); // Instant switch to Stage 10
+      } else {
+        // Hide password input container, show "Then you are an aunty" error screen!
+        document.getElementById('password-form-container').style.display = 'none';
+        document.getElementById('aunty-container').style.display = 'flex';
+      }
+    }
+
+    // Reset password form after wrong entry error page
+    function resetPasswordForm() {
+      document.getElementById('gift-password-input').value = '';
+      document.getElementById('password-form-container').style.display = 'flex';
+      document.getElementById('aunty-container').style.display = 'none';
+    }
+
+    // Floating box click action: Fades out box and pops up card elements
+    function openGiftBox() {
+      const wrapper = document.getElementById('gift-box-wrapper');
+      wrapper.style.transform = 'scale(0.8) translateY(-20px)';
+      wrapper.style.opacity = '0';
+      
+      setTimeout(() => {
+        wrapper.style.display = 'none';
+        
+        const selectionPage = document.getElementById('gift-cards-selection-page');
+        selectionPage.style.display = 'flex';
+        void selectionPage.offsetWidth; // trigger reflow
+        selectionPage.style.opacity = '1';
+        
+        // Stagger card pop ups
+        document.querySelectorAll('.gift-card-simple').forEach((card, idx) => {
+          setTimeout(() => {
+            card.classList.add('show');
+          }, idx * 250);
+        });
+      }, 600);
+    }
+
+    // Show individual gift message card and hide the selector page with paragraph stagger fade-in
+    function openGiftMessage(id) {
+      document.getElementById('gift-cards-selection-page').style.display = 'none';
+      const msgView = document.getElementById(`gift-message-${id}`);
+      
+      // Reset all paragraph states first
+      const paras = msgView.querySelectorAll('.fade-in-para');
+      paras.forEach(p => p.classList.remove('show'));
+      
+      msgView.style.display = 'flex';
+      void msgView.offsetWidth; // trigger reflow
+      
+      // Stagger paragraph display
+      paras.forEach((para, idx) => {
+        setTimeout(() => {
+          para.classList.add('show');
+        }, idx * 700); // 700ms delay between paragraphs
+      });
+    }
+
+    // Go back from individual message view to the selector page
+    function backToCardsSelection() {
+      document.getElementById('gift-message-1').style.display = 'none';
+      document.getElementById('gift-message-2').style.display = 'none';
+      
+      const selectionPage = document.getElementById('gift-cards-selection-page');
+      selectionPage.style.display = 'flex';
+      void selectionPage.offsetWidth; // trigger reflow
+    }
+
+    function createConfettiExplosion(parent) {
+      const colors = ['#ff85a1', '#ffc2d1', '#ffb3c1', '#ffffff', '#ff0a54'];
+      for (let i = 0; i < 40; i++) {
+        const c = document.createElement('div');
+        c.classList.add('confetti');
+        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 120 + 80;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance - 80;
+        
+        c.style.setProperty('--x', `${x}px`);
+        c.style.setProperty('--y', `${y}px`);
+        c.style.setProperty('--r', `${Math.random() * 720}deg`);
+        
+        c.style.left = '50%';
+        c.style.top = '50%';
+        
+        parent.appendChild(c);
+        setTimeout(() => c.remove(), 1500);
+      }
+    }
+  </script>
+</body>
+</html>
